@@ -207,6 +207,7 @@ class_names = pd.json_normalize(class_names).T.reset_index()
 class_names.columns = ['class_id', 'class_name']
 class_names.class_id = class_names.class_id.astype(int)
 
+
 image_info = image_names.join(bounding_boxes)\
     .join(class_labels)\
     .join(image_sizes)\
