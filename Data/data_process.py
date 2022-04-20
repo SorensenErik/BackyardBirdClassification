@@ -1,5 +1,6 @@
 #%%
 import numpy as np
+import pandas as pd
 import os
 import PIL
 import PIL.Image
@@ -135,74 +136,52 @@ def load_train_test_split(dataset_path=''):
   return train_images, test_images 
 
 #%%
-dataset_path = 'C:/Github/BackyardBirdClassification/Data/nabirds'
+base_path = 'E:/Datasets/NABirds/nabirds'
 image_path  = 'images'
 
 # Load in the image data
 # Assumes that the images have been extracted into a directory called "images"
-image_paths = load_image_paths(dataset_path, path_prefix=image_path)
-image_sizes = load_image_sizes(dataset_path)
-image_bboxes = load_bounding_box_annotations(dataset_path)
-image_parts = load_part_annotations(dataset_path)
-image_class_labels = load_image_labels(dataset_path)
+image_paths = load_image_paths(base_path, path_prefix=image_path)
+image_sizes = load_image_sizes(base_path)
+image_bboxes = load_bounding_box_annotations(base_path)
+image_parts = load_part_annotations(base_path)
+image_class_labels = load_image_labels(base_path)
 
 # Load in the class data
-class_names = load_class_names(dataset_path)
-class_hierarchy = load_hierarchy(dataset_path)
+class_names = load_class_names(base_path)
+class_hierarchy = load_hierarchy(base_path)
 
 BATCH_SIZE = 4
 IMG_HEIGHT = 600
 IMG_WIDTH = 600
 
 #%%
-train_ds = tf.keras.utils.image_dataset_from_directory(
-  data_dir,
-  validation_split=0.2,
-  subset="training",
-  seed=1234,
-  image_size=(IMG_HEIGHT, IMG_WIDTH),
-  batch_size=BATCH_SIZE)
 
-val_ds = tf.keras.utils.image_dataset_from_directory(
-  data_dir,
-  validation_split=0.2,
-  subset="validation",
-  seed=1234,
-  image_size=(IMG_HEIGHT, IMG_WIDTH),
-  batch_size=BATCH_SIZE)
-
-
-#%%
-import pandas as pd
-# from create_tfrecords import create
-
-base = "C:/Github/BackyardBirdClassification/Data/nabirds/"
-
-image_names = pd.read_csv(base+"/images.txt",
+image_names = pd.read_csv(base_path+"/images.txt",
                           sep=" ",
                           header=None,
                           names=["image_id", "image_name"],
                           index_col="image_id")
 
-bounding_boxes = pd.read_csv(base+"/bounding_boxes.txt",
+bounding_boxes = pd.read_csv(base_path+"/bounding_boxes.txt",
                              sep=" ",
                              header=None,
                              names=["image_id", "x", "y", "width", "height"],
                              index_col="image_id")
 
-class_labels = pd.read_csv(base+"/image_class_labels.txt",
+class_labels = pd.read_csv(base_path+"/image_class_labels.txt",
                            sep=" ",
                            header=None,
                            names=["image_id", "class_id"],
                            index_col="image_id")
 
-image_sizes = pd.read_csv(base+"/sizes.txt",
+image_sizes = pd.read_csv(base_path+"/sizes.txt",
                           sep=" ",
                           header=None,
                           names=["image_id", "iwidth", "iheight"],
                           index_col="image_id")
 
-class_names = load_class_names(base)
+class_names = load_class_names(base_path)
 class_names = pd.json_normalize(class_names).T.reset_index()
 class_names.columns = ['class_id', 'class_name']
 class_names.class_id = class_names.class_id.astype(int)
@@ -216,7 +195,7 @@ image_info = image_names.join(bounding_boxes)\
 dataset = image_info\
     .dropna()\
     .apply(lambda r: {
-        "filename":os.path.join(base,'images', r["image_name"]),
+        "filename":os.path.join(base_path,'images', r["image_name"]),
         "id":r.name,
         "class": {
             "label":r["class_id"]+1,
