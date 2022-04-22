@@ -216,3 +216,6 @@ dataset = image_info\
         },axis=1)\
     .values\
     .tolist()
+
+#%% Documentation for creating TF Record using the Object Detection API 
+# https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html#create-label-map
