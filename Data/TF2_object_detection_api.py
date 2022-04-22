@@ -148,7 +148,7 @@ hub_model = hub.load(model_handle)
 print('model loaded!')
 
 # %% Load the test Image
-selected_image = 'Beach' # @param ['Beach', 'Dogs', 'Naxos Taverna', 'Beatles', 'Phones', 'Birds']
+selected_image = 'Birds' # @param ['Beach', 'Dogs', 'Naxos Taverna', 'Beatles', 'Phones', 'Birds']
 flip_image_horizontally = False
 convert_image_to_grayscale = False
 
