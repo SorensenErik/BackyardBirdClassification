@@ -216,5 +216,3 @@ dataset = image_info\
         },axis=1)\
     .values\
     .tolist()
-
-#%% Create the TF Record Dataset of the Bird Dataset
